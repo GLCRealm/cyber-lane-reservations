@@ -113,7 +113,7 @@ const Booking = () => {
   };
 
   const handleBooking = async () => {
-    if (!user || !selectedFacility || !selectedDate || selectedSlots.length === 0) {
+    if (!selectedFacility || !selectedDate || selectedSlots.length === 0 || !customerEmail || !customerPhone) {
       toast({
         title: "Error",
         description: "Please complete all required fields",
@@ -130,7 +130,7 @@ const Booking = () => {
       const { error } = await supabase
         .from('bookings')
         .insert({
-          user_id: user.id,
+          user_id: user?.id || null,
           facility_id: selectedFacility.id,
           booking_date: selectedDate.toISOString().split('T')[0],
           start_time: selectedSlots[0],
