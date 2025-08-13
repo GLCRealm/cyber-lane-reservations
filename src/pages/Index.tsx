@@ -44,7 +44,7 @@ const Index = () => {
                   <Button
                     size="lg"
                     className="bg-gradient-primary hover:opacity-90 transition-all duration-300 text-lg px-8 py-6"
-                    onClick={() => navigate('/auth')}
+                    onClick={() => navigate('/booking')}
                   >
                     Start Gaming
                     <ArrowRight className="ml-2 w-5 h-5" />
