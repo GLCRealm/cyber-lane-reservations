@@ -129,6 +129,74 @@ export type Database = {
           },
         ]
       }
+      orders: {
+        Row: {
+          activity_name: string
+          amount: number
+          booking_date: string
+          created_at: string
+          currency: string | null
+          customer_email: string
+          customer_phone: string
+          end_time: string
+          facility_id: string | null
+          facility_name: string
+          id: string
+          selected_slots: string[]
+          start_time: string
+          status: string | null
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          activity_name: string
+          amount: number
+          booking_date: string
+          created_at?: string
+          currency?: string | null
+          customer_email: string
+          customer_phone: string
+          end_time: string
+          facility_id?: string | null
+          facility_name: string
+          id?: string
+          selected_slots: string[]
+          start_time: string
+          status?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          activity_name?: string
+          amount?: number
+          booking_date?: string
+          created_at?: string
+          currency?: string | null
+          customer_email?: string
+          customer_phone?: string
+          end_time?: string
+          facility_id?: string | null
+          facility_name?: string
+          id?: string
+          selected_slots?: string[]
+          start_time?: string
+          status?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_facility_id_fkey"
+            columns: ["facility_id"]
+            isOneToOne: false
+            referencedRelation: "facilities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

@@ -127,32 +127,42 @@ const Booking = () => {
     try {
       const totalAmount = selectedSlots.length * (selectedActivity?.hourly_rate || 0);
       
-      const { error } = await supabase
-        .from('bookings')
-        .insert({
-          user_id: user?.id || null,
-          facility_id: selectedFacility.id,
-          booking_date: selectedDate.toISOString().split('T')[0],
-          start_time: selectedSlots[0],
-          end_time: selectedSlots[selectedSlots.length - 1],
-          total_amount: totalAmount,
-          customer_email: customerEmail,
-          customer_phone: customerPhone,
-          status: 'confirmed'
-        });
+      // Call Stripe payment edge function
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {
+          facilityId: selectedFacility.id,
+          activityName: selectedActivity?.name,
+          facilityName: selectedFacility.name,
+          bookingDate: selectedDate.toISOString().split('T')[0],
+          startTime: selectedSlots[0],
+          endTime: selectedSlots[selectedSlots.length - 1],
+          selectedSlots: selectedSlots,
+          totalAmount: totalAmount,
+          customerEmail: customerEmail,
+          customerPhone: customerPhone,
+          userId: user?.id || null
+        }
+      });
 
       if (error) throw error;
 
-      toast({
-        title: "Booking Confirmed!",
-        description: "Your gaming session has been booked successfully.",
-      });
+      if (data?.url) {
+        // Redirect to Stripe checkout
+        window.open(data.url, '_blank');
+        
+        toast({
+          title: "Redirecting to Payment",
+          description: "Opening Stripe checkout in a new tab",
+        });
+      } else {
+        throw new Error("No payment URL received");
+      }
       
-      navigate('/dashboard');
     } catch (error) {
+      console.error("Payment error:", error);
       toast({
-        title: "Error",
-        description: "Failed to create booking",
+        title: "Payment Error",
+        description: "Failed to initiate payment. Please try again.",
         variant: "destructive",
       });
     } finally {
